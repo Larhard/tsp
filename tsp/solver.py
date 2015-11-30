@@ -47,7 +47,9 @@ class TSPPath:
         return self._cost
 
 
-def solve(vertices, tactic=tsp.utils.euclid_distance):
+def solve(vertices, tactic=None):
+    tactic = tactic or tsp.utils.euclid_distance
+
     todo = queue.PriorityQueue()
 
     todo.put((0, [vertices[0]], ))

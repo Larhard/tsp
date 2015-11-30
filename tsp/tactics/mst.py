@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 # Copyright (c) 2015, Bartlomiej Puget <larhard@gmail.com>
 # All rights reserved.
 #
@@ -28,34 +26,33 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
-import argparse
-import importlib
-
-import tsp.solver
 import tsp.utils
 
 
-def main(tactic, *args, **kwargs):
-    nvertices = int(input())
-    vertices = [tuple(map(lambda k: float(k), input().split()))
-        for _ in range(nvertices)]
+def tactic(p, q, vertices, path, distance=tsp.utils.euclid_distance,
+        *args, **kwargs):
+    result = distance(p, q)
 
-    path = tsp.solver.solve(vertices, tactic=tactic)
+    available = {k for k in vertices if k not in path}
+    taken = {q}
 
-    print(len(path) + 1)
-    for x, y in path:
-        print(x, y)
-    print(*path[0])
-    print(tsp.utils.path_length(path + [path[0]]))
+    mst_len = 0.
 
+    while len(available):
+        min_edge = None
+        min_vertex = None
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-tactic', '-t')
-    args = parser.parse_args()
+        for x in available:
+            for y in taken:
+                d = distance(x, y)
+                if min_edge is None or min_edge > d:
+                    min_edge = d
+                    min_vertex = x
 
-    if args.tactic:
-        args.tactic = importlib.import_module(args.tactic).tactic
+        taken.add(min_vertex)
+        available.remove(min_vertex)
+        mst_len += min_edge
 
-    main(**vars(args))
+    result += mst_len
+
+    return result
