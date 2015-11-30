@@ -28,23 +28,7 @@
 
 import queue
 
-from copy import copy
-
 import tsp.utils
-
-
-class TSPPath:
-    def __init__(self, path, cost, expected_cost):
-        self._path = copy(path)
-        self._cost = cost
-
-    @property
-    def visit_order(self):
-        return copy(self._path)
-
-    @property
-    def cost(self):
-        return self._cost
 
 
 def solve(vertices, tactic=None):
