@@ -30,7 +30,7 @@
 import math
 
 
-def euclid_distance(p, q):
+def euclid_distance(p, q, *args, **kwargs):
     return math.sqrt((p[0]-q[0])**2 + (p[1]-q[1])**2)
 
 

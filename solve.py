@@ -42,10 +42,11 @@ def main():
 
     path = tsp.solver.solve(vertices)
 
-    print(len(path))
+    print(len(path) + 1)
     for x, y in path:
         print(x, y)
-    print(tsp.utils.path_length(path))
+    print(*path[0])
+    print(tsp.utils.path_length(path + [path[0]]))
 
 
 if __name__ == '__main__':

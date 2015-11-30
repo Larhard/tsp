@@ -26,9 +26,50 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import random
+import queue
+
+from copy import copy
+
+import tsp.utils
 
 
-def solve(vertices):
-    random.shuffle(vertices)
-    return vertices
+class TSPPath:
+    def __init__(self, path, cost, expected_cost):
+        self._path = copy(path)
+        self._cost = cost
+
+    @property
+    def visit_order(self):
+        return copy(self._path)
+
+    @property
+    def cost(self):
+        return self._cost
+
+
+def solve(vertices, tactic=tsp.utils.euclid_distance):
+    todo = queue.PriorityQueue()
+
+    todo.put((0, [vertices[0]], ))
+
+    min_cost = None
+    min_path = None
+
+    while todo.qsize() > 0:
+        expected_cost, path = todo.get()
+        cost = tsp.utils.path_length(path)
+
+        if len(vertices) == len(path):
+            total_cost = cost + tsp.utils.euclid_distance(path[-1], path[0])
+            if min_cost is None or min_cost > total_cost:
+                min_cost = total_cost
+                min_path = path
+        else:
+            for v in vertices:
+                if v not in path:
+                    new_cost = cost + tactic(path[-1], v, vertices=vertices,
+                            path=path)
+                    if min_cost is None or new_cost < min_cost:
+                        todo.put((new_cost, path + [v]))
+
+    return min_path
