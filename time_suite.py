@@ -43,7 +43,7 @@ def main(tactic, *args, **kwargs):
     vertices = [tuple(map(lambda k: float(k), input().split()))
         for _ in range(nvertices)]
 
-    with timer.Timer(tactic):
+    with timer.Timer():
         path = tsp.solver.solve(vertices, tactic=tactic)
     length = tsp.utils.path_length(path + [path[0]])
     print(length)
@@ -51,7 +51,7 @@ def main(tactic, *args, **kwargs):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('tactic')
+    parser.add_argument('--tactic', '-t')
     args = parser.parse_args()
 
     if args.tactic:

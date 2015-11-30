@@ -32,11 +32,13 @@ from datetime import datetime
 class Timer:
     def __init__(self, message=None):
         self.begin = None
-        self.message = message or "::: timer :::"
+        self.message = message
 
     def __enter__(self):
         self.begin = datetime.now()
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
         end = datetime.now()
-        print(self.message, str(end - self.begin))
+
+        print(" ".join(k for k in (self.message, str(end - self.begin))
+                    if k is not None))
